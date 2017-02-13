@@ -233,7 +233,7 @@ static int (*gl_tab_hook)(char *buf, int prompt_width, int *loc) = gl_tab;
 
 /******************** imported interface *********************************/
 #ifdef DMALLOC
-/* reports leaks, which is the history buffer.  dont care */ 
+/* reports leaks, which is the history buffer.  dont care */
 #undef DMALLOC
 #endif
 #include "sigar_getline.h"
@@ -1423,7 +1423,7 @@ sigar_getline_histadd(char *buf)
                   char line[BUFSIZ];
 
                   fp = fopen(gl_histfile, "r");
-                  tmpnam(tname);
+                  mkstemp(tname);
                   ftmp = fopen(tname, "w");
                   if (fp && ftmp) {
                      int nline = 0;

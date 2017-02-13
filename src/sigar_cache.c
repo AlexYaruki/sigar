@@ -61,15 +61,15 @@ void sigar_cache_dump(sigar_cache_t *table)
 {
     int i;
     sigar_cache_entry_t **entries = table->entries;
-    printf("table size %lu\n", (long)table->size); 
+    printf("table size %lu\n", (long)table->size);
     printf("table count %lu\n", (long)table->count);
-    
+
     for (i=0; i<table->size; i++) {
         sigar_cache_entry_t *entry = *entries++;
 
         printf("|");
         while (entry) {
-            printf("%lld", entry->id);
+            printf("%lu", entry->id);
             if (entry->next) {
                 printf(",");
             }
@@ -112,7 +112,7 @@ static void sigar_cache_rehash(sigar_cache_t *table)
 #define SIGAR_CACHE_IX(t, k) \
     t->entries + (k % t->size)
 
-void sigar_perform_cleanup_if_necessary(sigar_cache_t *table) { 
+void sigar_perform_cleanup_if_necessary(sigar_cache_t *table) {
     sigar_uint64_t current_time;
 	int i;
 	sigar_cache_entry_t **entries;
@@ -124,13 +124,13 @@ void sigar_perform_cleanup_if_necessary(sigar_cache_t *table) {
     if ((current_time - table->last_cleanup_time) < table->cleanup_period_millis) {
         /* not enough time has passed since last cleanup */
         return;
-    }	
+    }
 
-    /* performing cleanup */    
+    /* performing cleanup */
     entries = table->entries;
 
     table->last_cleanup_time = current_time;
-    
+
     for (i=0; i<table->size; i++) {
         sigar_cache_entry_t *entry, *ptr, *entry_prev=NULL, **entry_in_table;
         entry_in_table = entries;
@@ -138,21 +138,21 @@ void sigar_perform_cleanup_if_necessary(sigar_cache_t *table) {
 
         while (entry) {
 			sigar_uint64_t period_with_no_access = current_time - entry->last_access_time;
-            ptr = entry->next;            
+            ptr = entry->next;
             if (table->entry_expire_period < period_with_no_access) {
 		       /* no one acess this entry for too long - we can delete it */
 	           if (entry->value) {
                    table->free_value(entry->value);
-                } 
+                }
                 free(entry);
 		        table->count--;
                 if (entry_prev != NULL) {
                    entry_prev->next = ptr;
                 }
                 else {
-                   /* removing first entry - head of list should point to next entry */               
+                   /* removing first entry - head of list should point to next entry */
                    *entry_in_table = ptr;
-                } 
+                }
             }
             else {
               /* entry not expired - advance entry_prev to current entry*/
@@ -167,7 +167,7 @@ void sigar_perform_cleanup_if_necessary(sigar_cache_t *table) {
     }
 }
 
-   
+
 
 
 sigar_cache_entry_t *sigar_cache_find(sigar_cache_t *table,

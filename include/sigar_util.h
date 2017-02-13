@@ -75,11 +75,11 @@ int sigar_inet_ntoa(sigar_t *sigar,
 struct hostent *sigar_gethostbyname(const char *name,
                                     sigar_hostent_t *data);
 
-extern SIGAR_INLINE char *sigar_skip_line(char *buffer, int buflen);
+char *sigar_skip_line(char *buffer, int buflen);
 
-extern SIGAR_INLINE char *sigar_skip_token(char *p);
+char *sigar_skip_token(char *p);
 
-extern SIGAR_INLINE char *sigar_skip_multiple_token(char *p, int count);
+char *sigar_skip_multiple_token(char *p, int count);
 
 char *sigar_getword(char **line, char stop);
 
