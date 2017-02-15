@@ -42,3 +42,4 @@ bindings/python/build
 build/
 **/.vagrant
 **/*-cloudimg-console.log
+bindings/go/bin
