@@ -44,3 +44,7 @@ build/
 **/*-cloudimg-console.log
 bindings/go/bin
 .vscode/
+bindings/java/target
+bindings/java/sigar.iml
+**/.idea
+src/sigar_version.c
