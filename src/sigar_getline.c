@@ -677,7 +677,7 @@ gl_putc(int c)
 static void
 gl_puts(char *buf)
 {
-    int len = strlen(buf);
+    int len = (int)strlen(buf);
 
     if (gl_notty) return;
 #ifdef WIN32
@@ -695,7 +695,7 @@ gl_puts(char *buf)
 static void
 gl_error(char *buf)
 {
-    int len = strlen(buf);
+    int len = (int)strlen(buf);
 
     gl_cleanup();
 #ifdef WIN32
@@ -881,7 +881,7 @@ sigar_getlinem(int mode, char *prompt)
             case '\t':                                        /* TAB */
                  if (gl_tab_hook) {
                       tmp = gl_pos;
-                      loc = gl_tab_hook(gl_buf, strlen(gl_prompt), &tmp);
+                      loc = gl_tab_hook(gl_buf, (int)strlen(gl_prompt), &tmp);
                       if (loc >= 0 || tmp != gl_pos || loc == -2)
                            gl_fixup(gl_prompt, loc, tmp);
                  }
@@ -1045,7 +1045,7 @@ gl_yank()
 {
     int  i, len;
 
-    len = strlen(gl_killbuf);
+    len = (int)strlen(gl_killbuf);
     if (len > 0) {
         gl_mark = gl_pos;
         if (gl_overwrite == 0) {
@@ -1102,7 +1102,7 @@ gl_newline()
         gl_error("\n*** Error: sigar_getline(): input buffer overflow\n");
     if (gl_out_hook) {
         change = gl_out_hook(gl_buf);
-        len = strlen(gl_buf);
+        len = (int)strlen(gl_buf);
     }
     if (gl_erase_line) {
         char gl_buf0 = gl_buf[0];
@@ -1214,10 +1214,10 @@ gl_fixup(char *prompt, int change, int cursor)
         gl_passwd = gl_no_echo;
         strcpy(last_prompt, prompt);
         change = 0;
-        gl_width = gl_termw - strlen(prompt);
+        gl_width = gl_termw - (int)strlen(prompt);
     } else if (strcmp(prompt, last_prompt) != 0) {
-        l1 = strlen(last_prompt);
-        l2 = strlen(prompt);
+        l1 = (int)strlen(last_prompt);
+        l2 = (int)strlen(prompt);
         gl_cnt = gl_cnt + l1 - l2;
         strcpy(last_prompt, prompt);
         backup = gl_pos - gl_shift + l1;
@@ -1233,7 +1233,7 @@ gl_fixup(char *prompt, int change, int cursor)
     padl = (off_right)? gl_width - 1 : gl_cnt - gl_shift;   /* old length */
     backup = gl_pos - gl_shift;
     if (change >= 0) {
-        gl_cnt = strlen(gl_buf);
+        gl_cnt = (int)strlen(gl_buf);
         if (change > gl_cnt)
             change = gl_cnt;
     }
@@ -1312,7 +1312,7 @@ gl_tab(char *buf, int offset, int *loc)
 {
     int i, count, len;
 
-    len = strlen(buf);
+    len = (int)strlen(buf);
     count = 8 - (offset + *loc) % 8;
     for (i=len; i >= *loc; i--)
         buf[i+count] = buf[i];
@@ -1393,7 +1393,7 @@ sigar_getline_histadd(char *buf)
     while (*p == ' ' || *p == '\t' || *p == '\n')
         p++;
     if (*p) {
-        len = strlen(buf);
+        len = (int)strlen(buf);
         if (strchr(p, '\n'))    /* previously line already has NL stripped */
             len--;
         if (prev == 0 || strlen(prev) != len ||
@@ -1504,7 +1504,7 @@ hist_save(char *p)
 /* makes a copy of the string */
 {
     char *s = 0;
-    int   len = strlen(p);
+    int   len = (int)strlen(p);
     char *nl = strchr(p, '\n');
 
     if (nl) {
@@ -1577,7 +1577,7 @@ search_addchar(int c)
         strcpy(gl_buf, hist_buf[hist_pos]);
     }
     if ((loc = strstr(gl_buf, search_string)) != 0) {
-        gl_fixup(search_prompt, 0, loc - gl_buf);
+        gl_fixup(search_prompt, 0, (int)(loc - gl_buf));
     } else if (search_pos > 0) {
         if (search_forw_flg) {
             search_forw(0);
@@ -1622,7 +1622,7 @@ search_back(int new_search)
                found = 1;
             } else if ((loc = strstr(p, search_string)) != 0) {
                strcpy(gl_buf, p);
-               gl_fixup(search_prompt, 0, loc - p);
+               gl_fixup(search_prompt, 0, (int)(loc - p));
                if (new_search)
                    search_last = hist_pos;
                found = 1;
@@ -1655,7 +1655,7 @@ search_forw(int new_search)
                found = 1;
             } else if ((loc = strstr(p, search_string)) != 0) {
                strcpy(gl_buf, p);
-               gl_fixup(search_prompt, 0, loc - p);
+               gl_fixup(search_prompt, 0, (int)(loc - p));
                if (new_search)
                    search_last = hist_pos;
                found = 1;
