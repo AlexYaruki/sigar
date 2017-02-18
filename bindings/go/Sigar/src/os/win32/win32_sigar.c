@@ -1593,9 +1593,9 @@ static int sigar_remote_proc_args_get(sigar_t *sigar, sigar_pid_t pid,
     }
 
     /* likely we are 32-bit, pid process is 64-bit */
-#ifdef MSVC
-    status = sigar_proc_args_wmi_get(sigar, pid, procargs);
-#endif
+// #ifdef MSVC
+//     status = sigar_proc_args_wmi_get(sigar, pid, procargs);
+// #endif
     if (status == ERROR_NOT_FOUND) {
         status = SIGAR_NO_SUCH_PROCESS;
     }
@@ -1765,16 +1765,16 @@ SIGAR_DECLARE(int) sigar_proc_exe_get(sigar_t *sigar, sigar_pid_t pid,
     }
 
     status = sigar_proc_exe_peb_get(sigar, proc, procexe);
-#ifdef MSVC
-    if (procexe->name[0] == '\0') {
-        /* likely we are 32-bit, pid process is 64-bit */
-        /* procexe->cwd[0] = XXX where else can we try? */
-        status = sigar_proc_exe_wmi_get(sigar, pid, procexe);
-        if (status == ERROR_NOT_FOUND) {
-            status = SIGAR_NO_SUCH_PROCESS;
-        }
-    }
-#endif
+// #ifdef MSVC
+//     if (procexe->name[0] == '\0') {
+//         /* likely we are 32-bit, pid process is 64-bit */
+//         /* procexe->cwd[0] = XXX where else can we try? */
+//         status = sigar_proc_exe_wmi_get(sigar, pid, procexe);
+//         if (status == ERROR_NOT_FOUND) {
+//             status = SIGAR_NO_SUCH_PROCESS;
+//         }
+//     }
+// #endif
     if (procexe->cwd[0] != '\0') {
         /* strip trailing '\' */
         int len = strlen(procexe->cwd);

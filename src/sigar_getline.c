@@ -1419,11 +1419,19 @@ sigar_getline_histadd(char *buf)
                /* if more than HIST_SIZE lines, safe last 60 command and delete rest */
                if (gl_savehist > HIST_SIZE) {
                   FILE *ftmp;
-                  char tname[L_tmpnam];
+                  
                   char line[BUFSIZ];
 
                   fp = fopen(gl_histfile, "r");
-                  mkstemp(tname);
+                  #ifndef WIN32
+                   char tname[L_tmpnam];
+                    mkstemp(tname);
+                  #else
+                    TCHAR lpTempPathBuffer[MAX_PATH];
+                    TCHAR tname[MAX_PATH];
+                    int status = GetTempPath(MAX_PATH,lpTempPathBuffer);
+                    status = GetTempFileName(lpTempPathBuffer,NULL,0,tname);
+                  #endif
                   ftmp = fopen(tname, "w");
                   if (fp && ftmp) {
                      int nline = 0;
