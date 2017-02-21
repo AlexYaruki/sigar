@@ -43,3 +43,4 @@ build/
 **/.vagrant
 **/*-cloudimg-console.log
 bindings/go/bin
+.vscode/
