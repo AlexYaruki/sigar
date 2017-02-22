@@ -1,18 +1,14 @@
-## sigar has some base files + a set of platform specific files
+include_directories(../include/)
 
-MESSAGE(STATUS "CMAKE_SYSTEM_NAME is ${CMAKE_SYSTEM_NAME}")
+include(CheckCSourceCompiles)
 
-INCLUDE_DIRECTORIES(../include/)
+macro (CHECK_STRUCT_MEMBER _STRUCT _MEMBER _HEADER _RESULT)
+   set(_INCLUDE_FILES)
+   foreach (it ${_HEADER})
+      set(_INCLUDE_FILES "${_INCLUDE_FILES}#include <${it}>\n")
+  endforeach (it)
 
-INCLUDE(CheckCSourceCompiles)
-
-MACRO (CHECK_STRUCT_MEMBER _STRUCT _MEMBER _HEADER _RESULT)
-   SET(_INCLUDE_FILES)
-   FOREACH (it ${_HEADER})
-      SET(_INCLUDE_FILES "${_INCLUDE_FILES}#include <${it}>\n")
-   ENDFOREACH (it)
-
-   SET(_CHECK_STRUCT_MEMBER_SOURCE_CODE "
+   set(_CHECK_STRUCT_MEMBER_SOURCE_CODE "
 ${_INCLUDE_FILES}
 int main()
 {
@@ -24,73 +20,73 @@ int main()
 ")
    CHECK_C_SOURCE_COMPILES("${_CHECK_STRUCT_MEMBER_SOURCE_CODE}" ${_RESULT})
 
-ENDMACRO (CHECK_STRUCT_MEMBER)
+endmacro (CHECK_STRUCT_MEMBER)
 
 
 ## linux
-IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  SET(SIGAR_SRC os/linux/linux_sigar.c)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(SIGAR_SRC os/linux/linux_sigar.c)
 
-  INCLUDE_DIRECTORIES(os/linux/)
+  include_directories(os/linux/)
   set(LIBSYS_NAME "linux")
-ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
 ## macosx, freebsd
-IF(CMAKE_SYSTEM_NAME MATCHES "(Darwin|FreeBSD)")
+if(CMAKE_SYSTEM_NAME MATCHES "(Darwin|FreeBSD)")
   SET(SIGAR_SRC os/darwin/darwin_sigar.c)
 
-  INCLUDE_DIRECTORIES(os/darwin/)
-  IF(CMAKE_SYSTEM_NAME MATCHES "(Darwin)")
-    ADD_DEFINITIONS(-DDARWIN)
-    SET(SIGAR_LINK_FLAGS "-framework CoreServices -framework IOKit")
+  include_directories(os/darwin/)
+  if(CMAKE_SYSTEM_NAME MATCHES "(Darwin)")
+    add_definitions(-DDARWIN)
+    set(SIGAR_LINK_FLAGS "-framework CoreServices -framework IOKit")
     set(LIBSYS_NAME "macosx")
-  ELSE(CMAKE_SYSTEM_NAME MATCHES "(Darwin)")
+else(CMAKE_SYSTEM_NAME MATCHES "(Darwin)")
     ## freebsd needs libkvm
-    SET(SIGAR_LINK_FLAGS "-lkvm")
+    set(SIGAR_LINK_FLAGS "-lkvm")
     set(LIBSYS_NAME "freebsd")
-  ENDIF(CMAKE_SYSTEM_NAME MATCHES "(Darwin)")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES "(Darwin|FreeBSD)")
+  endif(CMAKE_SYSTEM_NAME MATCHES "(Darwin)")
+endif(CMAKE_SYSTEM_NAME MATCHES "(Darwin|FreeBSD)")
 
 ## solaris
-IF (CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)" )
-  SET(SIGAR_SRC
+if (CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)" )
+  set(SIGAR_SRC
 	os/solaris/solaris_sigar.c
 	os/solaris/get_mib2.c
 	os/solaris/kstats.c
 	os/solaris/procfs.c
   )
 
-  INCLUDE_DIRECTORIES(os/solaris/)
-  ADD_DEFINITIONS(-DSOLARIS)
+  include_directories(os/solaris/)
+  add_definitions(-DSOLARIS)
   set(LIBSYS_NAME "solaris")
-  SET(SIGAR_LINK_FLAGS -lkstat -ldl -lnsl -lsocket -lresolv)
-ENDIF(CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)" )
+  set(SIGAR_LINK_FLAGS -lkstat -ldl -lnsl -lsocket -lresolv)
+endif(CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)" )
 
 ## solaris
-IF (CMAKE_SYSTEM_NAME MATCHES "(hpux)" )
-  SET(SIGAR_SRC os/hpux/hpux_sigar.c)
-  INCLUDE_DIRECTORIES(os/hpux/)
-  ADD_DEFINITIONS(-DSIGAR_HPUX)
-  SET(SIGAR_LINK_FLAGS -lnm)
+if (CMAKE_SYSTEM_NAME MATCHES "(hpux)" )
+  set(SIGAR_SRC os/hpux/hpux_sigar.c)
+  include_directories(os/hpux/)
+  add_definitions(-DSIGAR_HPUX)
+  set(SIGAR_LINK_FLAGS -lnm)
   set(LIBSYS_NAME "hpux")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES "(hpux)" )
+endif(CMAKE_SYSTEM_NAME MATCHES "(hpux)" )
 
 ## aix
-IF (CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
-  SET(SIGAR_SRC os/aix/aix_sigar.c)
+if (CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
+  set(SIGAR_SRC os/aix/aix_sigar.c)
 
-  INCLUDE_DIRECTORIES(os/aix/)
-  SET(SIGAR_LINK_FLAGS -lodm -lcfg)
+  include_directories(os/aix/)
+  set(SIGAR_LINK_FLAGS -lodm -lcfg)
   set(LIBSYS_NAME "aix")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
+endif(CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
 
-IF(WIN32)
-  ADD_DEFINITIONS(-DSIGAR_SHARED)
-  SET(SIGAR_SRC os/win32/peb.c os/win32/win32_sigar.c)
-  INCLUDE_DIRECTORIES(os/win32)
+if(WIN32)
+  add_definitions(-DSIGAR_SHARED)
+  set(SIGAR_SRC os/win32/peb.c os/win32/win32_sigar.c)
+  include_directories(os/win32)
   CHECK_STRUCT_MEMBER(MIB_IPADDRROW wType "windows.h;iphlpapi.h" wType_in_MIB_IPADDRROW)
   add_definitions(-DHAVE_MIB_IPADDRROW_WTYPE=${wType_in_MIB_IPADDRROW})
-ENDIF(WIN32)
+endif(WIN32)
 
 file(REMOVE sigar_version.c)
 file(READ sigar_version.c.in SIGAR_VERSION_FILE)
@@ -99,10 +95,8 @@ string(REPLACE "@@BUILD_DATE@@" ${SIGAR_BUILD_DATE} SIGAR_VERSION_FILE ${SIGAR_V
 string(REPLACE "@@BUILD_DATE@@" ${SIGAR_BUILD_DATE} SIGAR_VERSION_FILE ${SIGAR_VERSION_FILE})
 execute_process(COMMAND "git" "rev-parse" "HEAD" OUTPUT_VARIABLE SIGAR_REVISION)
 string(REPLACE "\n" "" SIGAR_REVISION ${SIGAR_REVISION})
-message(STATUS "Revision: ${SIGAR_REVISION}")
 string(REPLACE "@@SCM_REVISION@@" "${SIGAR_REVISION}" SIGAR_VERSION_FILE ${SIGAR_VERSION_FILE})
 string(REPLACE "@@VERSION_STRING@@" "${SIGAR_VERSION_MAJOR}.${SIGAR_VERSION_MINOR}.${SIGAR_VERSION_PATCH}" SIGAR_VERSION_FILE ${SIGAR_VERSION_FILE})
-message(STATUS "CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     set(ARCHNAME "amd64")
     string(REPLACE "@@ARCHNAME@@" "${ARCHNAME}" SIGAR_VERSION_FILE ${SIGAR_VERSION_FILE})
@@ -119,7 +113,7 @@ string(REPLACE "@@VERSION_MAINT@@" "${SIGAR_VERSION_PATCH}" SIGAR_VERSION_FILE $
 string(REPLACE "@@VERSION_BUILD@@" "0" SIGAR_VERSION_FILE ${SIGAR_VERSION_FILE})
 file(WRITE sigar_version.c ${SIGAR_VERSION_FILE})
 
-SET(SIGAR_SRC ${SIGAR_SRC}
+set(SIGAR_SRC ${SIGAR_SRC}
   sigar.c
   sigar_cache.c
   sigar_fileinfo.c
@@ -130,19 +124,19 @@ SET(SIGAR_SRC ${SIGAR_SRC}
   sigar_util.c
   sigar_version.c
 )
-ADD_LIBRARY(sigar_obj OBJECT ${SIGAR_SRC})
-SET_PROPERTY(TARGET sigar_obj PROPERTY POSITION_INDEPENDENT_CODE True)
-ADD_LIBRARY(sigar SHARED $<TARGET_OBJECTS:sigar_obj>)
-ADD_LIBRARY(sigar_static STATIC $<TARGET_OBJECTS:sigar_obj>)
-IF(WIN32)
-	TARGET_LINK_LIBRARIES(sigar ws2_32 netapi32 version)
-	TARGET_LINK_LIBRARIES(sigar_static ws2_32 netapi32 version)
-ENDIF(WIN32)
-IF(SIGAR_LINK_FLAGS)
-  SET_TARGET_PROPERTIES(sigar PROPERTIES LINK_FLAGS "${SIGAR_LINK_FLAGS}")
-ENDIF(SIGAR_LINK_FLAGS)
+add_library(sigar_obj OBJECT ${SIGAR_SRC})
+set_property(TARGET sigar_obj PROPERTY POSITION_INDEPENDENT_CODE True)
+add_library(sigar SHARED $<TARGET_OBJECTS:sigar_obj>)
+add_library(sigar_static STATIC $<TARGET_OBJECTS:sigar_obj>)
+if(WIN32)
+	target_link_libraries(sigar ws2_32 netapi32 version)
+	target_link_libraries(sigar_static ws2_32 netapi32 version)
+endif(WIN32)
+if(SIGAR_LINK_FLAGS)
+  set_target_properties(sigar PROPERTIES LINK_FLAGS "${SIGAR_LINK_FLAGS}")
+endif(SIGAR_LINK_FLAGS)
 
-INSTALL(TARGETS sigar
+install(TARGETS sigar
 	RUNTIME DESTINATION bin
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
