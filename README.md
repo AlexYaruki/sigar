@@ -1,12 +1,14 @@
-This repository contains independent fork of "hyperic/sigar" repository.
+# SIGAR - System Information Gatherer And Reporter
 
-SIGAR - System Information Gatherer And Reporter
+Library for getting information about hardware and operating system resources.
 
-Library for getting information about hardware and operating system resources. Base library is written in C with bindings to Java, C# and Go
+Base library is written in C with bindings to Java, C# and Go
+
+This repository contains independent fork of official "hyperic/sigar" repository maintained by VMware.
 
 Current documentation and binaries for version 1.6.4 are at SourceForge: https://sourceforge.net/projects/sigar/
 
-Target support for 2.0.0:
+#### Target support for 2.0.0:
 * Architectures:
     * amd64 (x86-64)
     * ARMv7
