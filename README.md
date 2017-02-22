@@ -25,19 +25,19 @@ Current documentation and binaries for version 1.6.4 are at SourceForge: https:/
      * Windows Server 2012 R2
      * Windows Server 2016
     * OS X
-     * OS X 10.8
-     * OS X 10.9
-     * OS X 10.10
-     * OS X 10.11
-     * macOS 10.12
+        * OS X 10.8
+        * OS X 10.9
+        * OS X 10.10
+        * OS X 10.11
+        * macOS 10.12
     * Linux
-     * Kernel: LTS releases, 3.2+
-     * Distributions:
-      * Debian: 7+
-      * Ubuntu: LTS releases: 14.04+
-      * Fedora: 24+
-      * CentOS: 6+
-      * openSuse: 42.1+
+        * Kernel: LTS releases, 3.2+
+        * Distributions:
+            * Debian: 7+
+            * Ubuntu: LTS releases: 14.04+
+            * Fedora: 24+
+            * CentOS: 6+
+            * openSuse: 42.1+
 
 * Bindings:
     * C++: std >= C++11
