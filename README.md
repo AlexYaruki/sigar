@@ -15,15 +15,15 @@ Current documentation and binaries for version 1.6.4 are at SourceForge: https:/
     * ARMv8
 * Operating systems:
     * Windows
-     * Windows 7
-     * Windows 8
-     * Windows 8.1
-     * Windows 10
+        * Windows 7
+        * Windows 8
+        * Windows 8.1
+        * Windows 10
     * Windows Server
-     * Windows Server 2008 R2
-     * Windows Server 2012
-     * Windows Server 2012 R2
-     * Windows Server 2016
+        * Windows Server 2008 R2
+        * Windows Server 2012
+        * Windows Server 2012 R2
+        * Windows Server 2016
     * OS X
         * OS X 10.8
         * OS X 10.9
