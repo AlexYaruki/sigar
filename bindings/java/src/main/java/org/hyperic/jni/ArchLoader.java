@@ -13,30 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.hyperic.jni;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ArchLoader {
+
     private Object loadLock = new Object();
 
     private boolean loaded = false;
 
     private final static String osName = System.getProperty("os.name");
 
-    public final static boolean IS_WIN32   = osName.startsWith("Windows");
-    public final static boolean IS_AIX     = osName.equals("AIX");
-    public final static boolean IS_HPUX    = osName.equals("HP-UX");
+    public final static boolean IS_WIN32 = osName.startsWith("Windows");
+    public final static boolean IS_AIX = osName.equals("AIX");
+    public final static boolean IS_HPUX = osName.equals("HP-UX");
     public final static boolean IS_SOLARIS = osName.equals("SunOS");
-    public final static boolean IS_LINUX   = osName.equals("Linux");
-    public final static boolean IS_DARWIN  = osName.equals("Mac OS X") || osName.equals("Darwin");
-    public final static boolean IS_OSF1    = osName.equals("OSF1");
+    public final static boolean IS_LINUX = osName.equals("Linux");
+    public final static boolean IS_DARWIN = osName.equals("Mac OS X") || osName.equals("Darwin");
+    public final static boolean IS_OSF1 = osName.equals("OSF1");
     public final static boolean IS_FREEBSD = osName.equals("FreeBSD");
     public final static boolean IS_NETWARE = osName.equals("NetWare");
 
@@ -49,7 +56,8 @@ public class ArchLoader {
     private File nativeLibrary;
     private String version;
 
-    public ArchLoader() { }
+    public ArchLoader() {
+    }
 
     public ArchLoader(Class loaderClass) {
         setLoaderClass(loaderClass); //e.g. Sigar.class
@@ -62,7 +70,7 @@ public class ArchLoader {
         setPackageName(pname); //e.g. org.hyperic.sigar
 
         ix = pname.lastIndexOf(".");
-        setName(pname.substring(ix+1)); //e.g. sigar
+        setName(pname.substring(ix + 1)); //e.g. sigar
 
         setJarName(getName() + ".jar");
 
@@ -122,18 +130,17 @@ public class ArchLoader {
     }
 
     public String getArchLibName()
-        throws ArchNotSupportedException {
+            throws ArchNotSupportedException {
 
         return getName() + "-" + ArchName.getName();
     }
 
     public String getDefaultLibName()
-        throws ArchNotSupportedException  {
+            throws ArchNotSupportedException {
 
-        return
-            System.getProperty(getPackageName() + ".libname",
-                               //e.g. javasigar-x86-linux
-                               "java" + getArchLibName());
+        return System.getProperty(getPackageName() + ".libname",
+                //e.g. javasigar-x86-linux
+                "java" + getArchLibName());
     }
 
     public File getNativeLibrary() {
@@ -142,7 +149,7 @@ public class ArchLoader {
 
     private String toResName(String name) {
         StringBuffer sb = new StringBuffer(name);
-        for (int i=0; i < sb.length(); i++) {
+        for (int i = 0; i < sb.length(); i++) {
             if (sb.charAt(i) == '.') {
                 sb.setCharAt(i, '/');
             }
@@ -175,11 +182,11 @@ public class ArchLoader {
             return ".sl";
         }
 
-        return ".so"; 
+        return ".so";
     }
 
     public String getLibraryName()
-        throws ArchNotSupportedException {
+            throws ArchNotSupportedException {
         String libName;
 
         if ((libName = getLibName()) == null) {
@@ -233,28 +240,26 @@ public class ArchLoader {
                 if (ix == -1) {
                     return false;
                 }
-                this.version =
-                    jarName.substring(jarName.indexOf('-')+1, ix);
-                jarName = jarName.substring(0, ix+4);
+                this.version
+                        = jarName.substring(jarName.indexOf('-') + 1, ix);
+                jarName = jarName.substring(0, ix + 4);
                 setJarName(jarName); //for future reference
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public String findJarPath(String libName)
-        throws ArchLoaderException {
+            throws ArchLoaderException {
         return findJarPath(libName, true);
     }
 
     private String findJarPath(String libName, boolean isRequired)
-        throws ArchLoaderException {
+            throws ArchLoaderException {
         /*
          * native libraries should be installed along side
          * ${this.name}.jar, try to find where ${this.name}.jar
@@ -273,9 +278,9 @@ public class ArchLoader {
         }
 
         if ((url == null) && (loader instanceof URLClassLoader)) {
-            URL[] urls = ((URLClassLoader)loader).getURLs();
+            URL[] urls = ((URLClassLoader) loader).getURLs();
 
-            for (int i=0; i<urls.length; i++) {
+            for (int i = 0; i < urls.length; i++) {
                 if (isJarURL(urls[i])) {
                     url = urls[i];
                     break;
@@ -285,14 +290,13 @@ public class ArchLoader {
 
         if (url == null) {
             if (isRequired) {
-                throw new ArchLoaderException("Unable to find " +
-                                              getJarName());
-            }
-            else {
+                throw new ArchLoaderException("Unable to find "
+                        + getJarName());
+            } else {
                 return null;
             }
         }
-        
+
         path = url.getFile();
 
         if (path.startsWith("file:")) {
@@ -301,9 +305,8 @@ public class ArchLoader {
         File file = new File(path);
         String jarName = getJarName();
 
-        while ((file != null) &&
-               !file.getName().startsWith(jarName))
-        {
+        while ((file != null)
+                && !file.getName().startsWith(jarName)) {
             file = file.getParentFile();
         }
 
@@ -313,19 +316,18 @@ public class ArchLoader {
             libName = jarName;
         }
 
-        if ((file != null) &&
-            ((file = file.getParentFile()) != null))
-        {
+        if ((file != null)
+                && ((file = file.getParentFile()) != null)) {
             String dir;
-			try {
-				// Passing UTF-8 according to the recommendation in the URLDecoder.decode JavaDoc.
-				dir = URLDecoder.decode(file.toString(), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				String msg = "Unsupported encoding in file name: " + file.toString();
-				ArchLoaderException archLoaderException = new ArchLoaderException(msg);
-				archLoaderException.initCause(e);
-				throw archLoaderException;
-			}
+            try {
+                // Passing UTF-8 according to the recommendation in the URLDecoder.decode JavaDoc.
+                dir = URLDecoder.decode(file.toString(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                String msg = "Unsupported encoding in file name: " + file.toString();
+                ArchLoaderException archLoaderException = new ArchLoaderException(msg);
+                archLoaderException.initCause(e);
+                throw archLoaderException;
+            }
             if (findNativeLibrary(dir, libName)) {
                 return dir;
             }
@@ -363,21 +365,20 @@ public class ArchLoader {
         File path = new File(dir).getAbsoluteFile();
         if (containsNativeLibrary(path, name)) {
             return true;
-        }
-        else if (containsNativeLibrary(path, getVersionedLibraryName())) {
+        } else if (containsNativeLibrary(path, getVersionedLibraryName())) {
             return true;
         }
         //try w/o arch name (e.g. "libsigar.so")
         return containsNativeLibrary(path,
-                                     getLibraryPrefix() +
-                                     getName() +
-                                     getLibraryExtension());
+                getLibraryPrefix()
+                + getName()
+                + getLibraryExtension());
     }
 
     protected boolean findInJavaLibraryPath(String libName) {
         String path = System.getProperty("java.library.path", "");
-        StringTokenizer tok =
-            new StringTokenizer(path, File.pathSeparator);
+        StringTokenizer tok
+                = new StringTokenizer(path, File.pathSeparator);
         while (tok.hasMoreTokens()) {
             path = tok.nextToken();
             if (findNativeLibrary(path, libName)) {
@@ -388,8 +389,8 @@ public class ArchLoader {
     }
 
     protected void loadLibrary(String path)
-        throws ArchNotSupportedException,
-               ArchLoaderException {
+            throws ArchNotSupportedException,
+            ArchLoaderException {
 
         try {
             String libName = getLibraryName();
@@ -405,18 +406,18 @@ public class ArchLoader {
                 }
                 findJarPath(null, false); //check for versioned .jar
                 findNativeLibrary(path, libName);
-            }
-            else {
+            } else {
                 if (findJarPath(libName, false) == null) {
-                    findInJavaLibraryPath(libName);
+                    if (!findInJavaLibraryPath(libName)) {
+                        findInsideJar(libName);
+                    }
                 }
             }
 
             //nativeLibrary set when findJarPath() calls findNativeLibrary()
             if (this.nativeLibrary != null) {
                 systemLoad(this.nativeLibrary.toString());
-            }
-            else {
+            } else {
                 //LD_LIBRARY_PATH must be set for linux and solaris
                 //SHLIB_PATH must be set for hpux
                 //PATH must be set for windows
@@ -428,23 +429,23 @@ public class ArchLoader {
                 reason = e.getClass().getName();
             }
 
-            String msg =
-                "Failed to load " + libName +
-                ": " + reason;
+            String msg
+                    = "Failed to load " + libName
+                    + ": " + reason;
 
             throw new ArchLoaderException(msg);
         }
     }
 
     public void load()
-        throws ArchNotSupportedException,
-               ArchLoaderException {
+            throws ArchNotSupportedException,
+            ArchLoaderException {
         load(null);
     }
 
     public void load(String path)
-        throws ArchNotSupportedException,
-               ArchLoaderException {
+            throws ArchNotSupportedException,
+            ArchLoaderException {
         /*
          * System.loadLibrary() is only supposed to load the library
          * once per-classloader.  but we make extra sure that is the case.
@@ -455,6 +456,34 @@ public class ArchLoader {
             }
             loadLibrary(path);
             this.loaded = true;
+        }
+    }
+
+    private void findInsideJar(String libName) {
+        InputStream libStream = loaderClass.getResourceAsStream(libName);
+        if (libStream != null) {
+            File temp = null;
+            try {
+                temp = File.createTempFile("sigar", ".so");
+                temp.deleteOnExit();
+            } catch (IOException ex) {
+                Logger.getLogger(ArchLoader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (temp != null) {
+                byte[] buffer = new byte[1024];
+                try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(temp));
+                        BufferedInputStream bis = new BufferedInputStream(libStream)) {
+                    int bytesRead = bis.read(buffer);
+                    do {
+                        bos.write(buffer, 0, bytesRead);
+                        bos.flush();
+                        bytesRead = bis.read(buffer);
+                    } while (bytesRead != -1);
+                } catch (IOException ex) {
+                    Logger.getLogger(ArchLoader.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                this.nativeLibrary = temp;
+            }
         }
     }
 }

@@ -48,3 +48,6 @@ bindings/java/target
 bindings/java/sigar.iml
 **/.idea
 src/sigar_version.c
+nbproject/
+**/nbactions.xml
+/bindings/java/src/main/resources/libsigar-amd64-linux.so

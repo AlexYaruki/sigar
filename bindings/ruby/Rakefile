@@ -57,12 +57,10 @@ task :build do
   unless File.exists? "Makefile"
     unless system("ruby extconf.rb")
       STDERR.puts "Failed to configure"
-      break
     end
   end
   unless system(MAKE)
     STDERR.puts 'Failed to ' + MAKE
-    break
   end
 end
 

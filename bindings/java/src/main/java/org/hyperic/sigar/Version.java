@@ -6,5 +6,5 @@ class Version {
 
     static final String SCM_REVISION = "0a9f0af";
 
-    static final String VERSION_STRING = "1.7.0.0";
+    static final String VERSION_STRING = "2.0.0.0";
 }

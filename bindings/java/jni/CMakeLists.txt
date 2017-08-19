@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(sigar_jni)
 
-link_directories(/home/zayl/git/sigar/build/build-src)
-include_directories(/home/zayl/git/sigar/include)
+link_directories(${CMAKE_SOURCE_DIR}/../../../build-src)
+include_directories(${CMAKE_SOURCE_DIR}/../../../include)
 set(LINK_LIBRARIES sigar_static)
 find_package(JNI)
 if(JNI_FOUND)
@@ -29,7 +29,7 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LIBRARY_NAME "${LIBRARY_NAME}-linux")
-    include_directories(/home/zayl/git/sigar/src/os/linux)
+    include_directories(${CMAKE_SOURCE_DIR}/../../../src/os/linux)
 endif()
 
 message(STATUS "Library name: ${LIBRARY_NAME}")
