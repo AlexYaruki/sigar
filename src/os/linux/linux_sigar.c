@@ -1624,7 +1624,7 @@ static void get_cpuinfo_max_freq(sigar_cpu_info_t *cpu_info, int num)
 
     status =
         sigar_file2str(max_freq, max_freq, sizeof(max_freq)-1);
-
+    cpu_info->mhz_max = 0;
     if (status == SIGAR_OK) {
         cpu_info->mhz_max = atoi(max_freq) / 1000;
     }
@@ -1640,7 +1640,7 @@ static void get_cpuinfo_min_freq(sigar_cpu_info_t *cpu_info, int num)
 
     status =
         sigar_file2str(min_freq, min_freq, sizeof(min_freq)-1);
-
+    cpu_info->mhz_min = 0;
     if (status == SIGAR_OK) {
         cpu_info->mhz_min = atoi(min_freq) / 1000;
     }

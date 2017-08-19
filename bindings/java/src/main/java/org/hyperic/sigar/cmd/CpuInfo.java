@@ -27,7 +27,7 @@ import org.hyperic.sigar.SigarException;
 public class CpuInfo extends SigarCommandBase {
 
     public boolean displayTimes = true;
-    
+
     public CpuInfo(Shell shell) {
         super(shell);
     }
@@ -67,6 +67,8 @@ public class CpuInfo extends SigarCommandBase {
         println("Vendor........." + info.getVendor());
         println("Model.........." + info.getModel());
         println("Mhz............" + info.getMhz());
+        println("Mhz(Min)......." + info.getMhzMin());
+        println("Mhz(Max)......." + info.getMhzMax());
         println("Total CPUs....." + info.getTotalCores());
         if ((info.getTotalCores() != info.getTotalSockets()) ||
             (info.getCoresPerSocket() > info.getTotalCores()))

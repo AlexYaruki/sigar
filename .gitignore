@@ -51,3 +51,4 @@ src/sigar_version.c
 nbproject/
 **/nbactions.xml
 /bindings/java/src/main/resources/libsigar-amd64-linux.so
+/bindings/java/src/main/resources/org/hyperic/sigar/libsigar-amd64-linux.so
