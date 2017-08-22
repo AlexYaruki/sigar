@@ -39,13 +39,19 @@ public class ArchName {
     }
 
     private static String getArchName() throws ArchNotSupportedException {
-        String name    = System.getProperty("os.name");
-        String arch    = System.getProperty("os.arch");
-        String version = System.getProperty("os.version");
+        String name      = System.getProperty("os.name");
+        String arch      = System.getProperty("os.arch");
+        String version   = System.getProperty("os.version");
         String majorVersion = version.substring(0, 1); //4.x, 5.x, etc.
 
         if (arch.endsWith("86")) {
             arch = "x86";
+        } else if(arch.contains("arm")) {
+            if(is64()) {
+                arch = "armv8";
+            } else {
+                arch = "armv7";
+            }
         }
 
         if (name.equals("Linux")) {

@@ -394,7 +394,7 @@ public class ArchLoader {
 
         try {
             String libName = getLibraryName();
-
+	        System.out.println("Library name: " + libName);
             if (path == null) {
                 //e.g. org.hyperic.sigar.path
                 path = System.getProperty(getPackageName() + ".path");
