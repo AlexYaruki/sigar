@@ -18,16 +18,16 @@
 #define SIGAR_OS_H
 
 #ifdef DARWIN
-#include <mach/port.h>
-#include <mach/host_info.h>
-#ifdef DARWIN_HAS_LIBPROC_H
-#include <mach-o/dyld.h>
-#include <libproc.h>
-typedef int (*proc_pidinfo_func_t)(int, int, uint64_t,  void *, int);
-typedef int (*proc_pidfdinfo_func_t)(int, int, int, void *, int); 
-#endif
+    #include <mach/port.h>
+    #include <mach/host_info.h>
+    #ifdef DARWIN_HAS_LIBPROC_H
+        #include <mach-o/dyld.h>
+        #include <libproc.h>
+        typedef int (*proc_pidinfo_func_t)(int, int, uint64_t,  void *, int);
+        typedef int (*proc_pidfdinfo_func_t)(int, int, int, void *, int); 
+    #endif
 #else
-#include <kvm.h>
+    //#include <kvm.h>
 #endif
 
 #ifdef __NetBSD__
@@ -61,16 +61,11 @@ struct sigar_t {
     size_t argmax;
 #ifdef DARWIN
     mach_port_t mach_port;
-#  ifdef DARWIN_HAS_LIBPROC_H
-    void *libproc;
-    proc_pidinfo_func_t proc_pidinfo;
-    proc_pidfdinfo_func_t proc_pidfdinfo;
-#  endif
-#else
-    kvm_t *kmem;
-    /* offsets for seeking on kmem */
-    unsigned long koffsets[KOFFSET_MAX];
-    int proc_mounted;
+    #ifdef DARWIN_HAS_LIBPROC_H
+        void *libproc;
+        proc_pidinfo_func_t proc_pidinfo;
+        proc_pidfdinfo_func_t proc_pidfdinfo;
+    #endif
 #endif
 };
 
