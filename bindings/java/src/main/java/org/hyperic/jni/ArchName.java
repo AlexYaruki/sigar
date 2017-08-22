@@ -18,7 +18,7 @@
 package org.hyperic.jni;
 
 /**
- * Helper class for naming the jni library with 
+ * Helper class for naming the jni library with
  * platform/arch name for which it is binary compatible.
  */
 public class ArchName {
@@ -85,16 +85,11 @@ public class ArchName {
                 //v5 binary is compatible with v6
                 majorVersion = "5";
             }
-            //arch == "ppc" on 32-bit, "ppc64" on 64-bit 
+            //arch == "ppc" on 32-bit, "ppc64" on 64-bit
             return arch + "-aix-" + majorVersion;
         }
         else if (name.equals("Mac OS X") || name.equals("Darwin")) {
-            if (is64()) {
-                return "universal64-macosx";
-            }
-            else {
-                return "universal-macosx";
-            }
+            return "amd64-darwin";
         }
         else if (name.equals("FreeBSD")) {
             //none of the 4,5,6 major versions are binary compatible

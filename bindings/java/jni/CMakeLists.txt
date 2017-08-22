@@ -7,7 +7,7 @@ link_directories(${CMAKE_SOURCE_DIR}/../../../build/build-src)
 # Path to main sigar library headers
 include_directories(${CMAKE_SOURCE_DIR}/../../../include)
 
-set(LINK_LIBRARIES sigar_static)
+set(LINK_LIBRARIES sigar)
 
 find_package(JNI)
 if(JNI_FOUND)
@@ -30,6 +30,9 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LIBRARY_NAME "${LIBRARY_NAME}-linux")
     include_directories(${CMAKE_SOURCE_DIR}/../../../src/os/linux)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(LIBRARY_NAME "${LIBRARY_NAME}-darwin")
+    include_directories(${CMAKE_SOURCE_DIR}/../../../src/os/darwin)
 endif()
 
 message(STATUS "Library name: ${LIBRARY_NAME}")
