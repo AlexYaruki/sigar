@@ -1,3 +1,3 @@
 #!/bin/bash
 
-vagrant ssh -- "./vagrantTestMaster.sh"
+vagrant ssh sigar_ubuntu_16_04 -- "./vagrantTestMaster.sh"
