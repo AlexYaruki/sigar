@@ -24,16 +24,15 @@
 #endif
 
 #ifdef MSVC
-#define WIN32_LEAN_AND_MEAN
-#if _MSC_VER <= 1200
-#define SIGAR_USING_MSC6 /* Visual Studio version 6 */
-#define HAVE_MIB_IPADDRROW_WTYPE 0
-#else
-#define HAVE_MIB_IPADDRROW_WTYPE 1
-#endif
+	#if _MSC_VER <= 1200
+		#define SIGAR_USING_MSC6 /* Visual Studio version 6 */
+		#define HAVE_MIB_IPADDRROW_WTYPE 0
+	#else
+		#define HAVE_MIB_IPADDRROW_WTYPE 1
+	#endif
 #else
 /* Cross compiling */
-#define _WIN32_WINNT 0x0501
+	#define _WIN32_WINNT 0x0501
 #endif
 
 #include <windows.h>

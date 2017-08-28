@@ -199,7 +199,7 @@ int sigar_proc_env_peb_get(sigar_t *sigar, HANDLE proc,
     if (VirtualQueryEx(proc, rtl.Environment, &info, sizeof(info))) {
         if (size > info.RegionSize) {
             /* ReadProcessMemory beyond region would fail */
-            size = info.RegionSize;
+            size = (DWORD)info.RegionSize;
         }
     }
 
