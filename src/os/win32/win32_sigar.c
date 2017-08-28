@@ -3208,12 +3208,6 @@ static int net_conn_get_udp(sigar_net_connection_walker_t *walker)
     for (i = 0; i < udp->dwNumEntries; i++) {
         sigar_net_connection_t conn;
 
-        if (!(IS_UDP_SERVER(conn, flags) ||
-              IS_UDP_CLIENT(conn, flags)))
-        {
-            continue;
-        }
-
         conn.local_port  = htons((WORD)udp->table[i].dwLocalPort);
         conn.remote_port = 0;
 

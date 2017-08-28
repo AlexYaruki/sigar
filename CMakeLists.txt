@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(sigar C)
-
 cmake_policy(SET CMP0053 NEW)
+
 include(CheckIncludeFiles)
 include(CheckFunctionExists)
 include(CheckTypeSize)
@@ -9,6 +9,10 @@ include(CTest)
 include(InstallRequiredSystemLibraries)
 
 enable_testing()
+
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE "Debug")
+endif()
 
 file(STRINGS ${PROJECT_SOURCE_DIR}/version.properties PROJECT_PROPERTIES)
 list(LENGTH PROJECT_PROPERTIES PROJECT_PROPERTIES_LENGTH)
@@ -54,4 +58,4 @@ endif(WIN32)
 add_subdirectory(src build-src)
 add_subdirectory(tests build-tests)
 add_subdirectory(include build-include)
-add_subdirectory(info_dump build-info_dump)
+#add_subdirectory(info_dump build-info_dump)

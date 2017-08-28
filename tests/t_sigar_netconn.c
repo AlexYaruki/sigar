@@ -50,7 +50,7 @@ TEST(test_sigar_net_connections_get) {
 	size_t i;
 	int ret;
 
-	if (SIGAR_OK == (ret = sigar_net_connection_list_get(t, &connlist, 
+	if (SIGAR_OK == (ret = sigar_net_connection_list_get(t, &connlist,
 				SIGAR_NETCONN_SERVER | SIGAR_NETCONN_CLIENT |
 				SIGAR_NETCONN_TCP | SIGAR_NETCONN_UDP))) {
 		assert(connlist.number > 0);
@@ -63,7 +63,9 @@ TEST(test_sigar_net_connections_get) {
 			assert(con.uid >= 0);
 			assert(con.inode >= 0);
 			assert(con.type >= 0);
-			assert(con.state >= 0);
+			if(con.type != SIGAR_NETCONN_UDP) {
+				assert(con.state >= 0);
+			}
 			assert(con.send_queue >= 0);
 			assert(con.receive_queue >= 0);
 		}
@@ -76,7 +78,7 @@ TEST(test_sigar_net_connections_get) {
 			break;
 		default:
 			fprintf(stderr, "ret = %d (%s)\n", ret, sigar_strerror(t, ret));
-			assert(ret == SIGAR_OK); 
+			assert(ret == SIGAR_OK);
 			break;
 		}
 	}
@@ -87,7 +89,7 @@ TEST(test_sigar_net_connections_get) {
 int main() {
 	sigar_t *t;
 	int err = 0;
-	
+
 	assert(SIGAR_OK == sigar_open(&t));
 
 	test_sigar_net_connections_get(t);
