@@ -60,7 +60,7 @@ TEST(test_sigar_loadavg_get) {
 #if !(defined(_WIN32))
 			/* win32 has no loadavg */
 			fprintf(stderr, "ret = %d (%s)\n", ret, sigar_strerror(t, ret));
-			assert(ret == SIGAR_OK); 
+			assert(ret == SIGAR_OK);
 #endif
 			break;
 		}
@@ -71,8 +71,7 @@ TEST(test_sigar_loadavg_get) {
 
 int main() {
 	sigar_t *t;
-	int err = 0;
-	
+
 	assert(SIGAR_OK == sigar_open(&t));
 
 	test_sigar_loadavg_get(t);

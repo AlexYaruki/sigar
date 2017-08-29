@@ -59,8 +59,7 @@ TEST(test_sigar_version_get) {
 
 int main() {
 	sigar_t *t;
-	int err = 0;
-	
+
 	assert(SIGAR_OK == sigar_open(&t));
 
 	test_sigar_version_get(t);
