@@ -22,11 +22,9 @@ int main()
 
 endmacro (CHECK_STRUCT_MEMBER)
 
-
 ## linux
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(SIGAR_SRC os/linux/linux_sigar.c)
-
   include_directories(os/linux/)
   set(LIBSYS_NAME "linux")
 endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -134,6 +132,9 @@ if(WIN32)
 	target_link_libraries(sigar_static ws2_32 netapi32 version)
 
 endif(WIN32)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  target_compile_options(sigar_obj PUBLIC -Wall -Werror)
+endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 if(SIGAR_LINK_FLAGS)
   set_target_properties(sigar PROPERTIES LINK_FLAGS "${SIGAR_LINK_FLAGS}")
 endif(SIGAR_LINK_FLAGS)

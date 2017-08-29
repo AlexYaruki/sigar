@@ -192,10 +192,7 @@ sigar_uint64_t get_io_diff(sigar_uint64_t current_value, sigar_uint64_t prev_val
    }
    io_diff = (( current_value - prev_value)/(double)time_diff)*SIGAR_MSEC;
    int_io_diff = (sigar_uint64_t)io_diff;
-   if (int_io_diff >=0) {
-      return int_io_diff;
-   }
-   return 0;
+   return int_io_diff;
 }
 
 void calculate_io_diff(sigar_proc_cumulative_disk_io_t * proc_disk_io, sigar_cached_proc_disk_io_t *cached,  sigar_uint64_t time_diff, int is_first_time) {
@@ -242,10 +239,6 @@ SIGAR_DECLARE(int) sigar_proc_disk_io_get(sigar_t *sigar, sigar_pid_t pid,
     if (time_diff < 1000) {
         /* we were just called within < 1 second ago. */
         copy_cached_disk_io_into_disk_io(prev, proc_disk_io);
-	if (time_diff < 0) {
-	   // something is wrong at least from now on the time will be ok
- 	   prev->last_time = time_now;
-        }
         return SIGAR_OK;
     }
     prev->last_time = time_now;
