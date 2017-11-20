@@ -44,6 +44,7 @@ endif()
 
 message(STATUS "Library name: ${LIBRARY_NAME}")
 
+set(CMAKE_CXX_FLAGS "-g")
 add_library(${LIBRARY_NAME} SHARED ${SRCS})
 add_custom_command(TARGET ${LIBRARY_NAME} POST_BUILD COMMAND "${CMAKE_COMMAND}" "-E" "copy" "$<TARGET_FILE:${LIBRARY_NAME}>" "${CMAKE_SOURCE_DIR}/../src/main/resources/org/hyperic/sigar/$<TARGET_FILE_NAME:${LIBRARY_NAME}>")
 target_link_libraries(${LIBRARY_NAME} ${LINK_LIBRARIES})
