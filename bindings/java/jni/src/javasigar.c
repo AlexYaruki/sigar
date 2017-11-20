@@ -27,6 +27,7 @@
 #include "sigar_format.h"
 
 #include <string.h>
+#include <assert.h>
 
 #ifdef WIN32
 #include <winsock.h>
@@ -4450,6 +4451,7 @@ JNIEXPORT jobjectArray SIGAR_JNIx(getArpList)
         jobject info_obj = JENV->AllocObject(env, cls);
         JAVA_SIGAR_SET_FIELDS_ARP(cls, info_obj,
                                   arplist.data[i]);
+        assert(info_obj != NULL);
         JENV->SetObjectArrayElement(env, arparray, i, info_obj);
     }
 

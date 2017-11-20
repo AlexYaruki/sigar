@@ -8,7 +8,7 @@
     <name>sigar</name>
 
     <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
@@ -21,9 +21,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <excludes>
-                        <exclude>org/hyperic/sigar/win32/**.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -130,7 +127,7 @@
                 <sigar.native.library>libsigar-amd64-linux.so</sigar.native.library>
             </properties>
         </profile>
-	<profile>
+        <profile>
             <id>platform-osx</id>
             <activation>
                 <os>
