@@ -31,7 +31,6 @@ import junit.textui.TestRunner;
 
 import org.hyperic.sigar.cmd.Version;
 
-import org.apache.log4j.PropertyConfigurator;
 
 public class SigarTestPrinter extends ResultPrinter {
 
@@ -155,7 +154,6 @@ public class SigarTestPrinter extends ResultPrinter {
                 props.setProperty(LOG_PROPS[i][0],
                                   LOG_PROPS[i][1]);
             }
-            PropertyConfigurator.configure(props);
 
             SigarTestCase.setVerbose(true);
             SigarTestCase.setWriter(printer.getWriter());
