@@ -9,6 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <surefire.version>2.20.1</surefire.version>
     </properties>
 
     <build>
@@ -21,6 +22,16 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/win32/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -126,6 +137,11 @@
             <properties>
                 <sigar.native.library>libsigar-amd64-linux.so</sigar.native.library>
             </properties>
+            <build>
+                <plugins>
+
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>platform-osx</id>
@@ -150,11 +166,10 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${surefire.version}</version>
                         <configuration>
-                            <includes>
-                                <include>org/hyperic/sigar/win32/**.java</include>
-                            </includes>
+                            <includes>**/win32/**</includes>
                         </configuration>
                     </plugin>
                 </plugins>
