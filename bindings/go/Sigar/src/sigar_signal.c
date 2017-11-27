@@ -18,7 +18,7 @@
 #include "sigar_private.h"
 #include "sigar_util.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #endif
 
@@ -27,7 +27,7 @@
 
 SIGAR_DECLARE(int) sigar_proc_kill(sigar_pid_t pid, int signum)
 {
-#ifdef WIN32
+#ifdef _WIN32
     int status = -1;
     HANDLE proc =
         OpenProcess(PROCESS_ALL_ACCESS,

@@ -70,7 +70,7 @@
  * <http://www.apache.org/>.
  */
 
-#ifndef WIN32
+#ifndef _WIN32
 #  ifdef _AIX
 #    define _LARGE_FILES
 #  else
@@ -81,14 +81,14 @@
 
 #include "sigar.h"
 
-#ifndef WIN32
-#if defined(__FreeBSD__) || defined(__OpenBSD__)
-# include <sys/param.h>
-# include <sys/mount.h>
-#else
-# include <sys/statvfs.h>
-# define HAVE_STATVFS
-#endif
+#ifndef _WIN32
+	#if defined(__FreeBSD__) || defined(__OpenBSD__)
+	# include <sys/param.h>
+	# include <sys/mount.h>
+	#else
+	# include <sys/statvfs.h>
+	# define HAVE_STATVFS
+	#endif
 #include <errno.h>
 
 #define SIGAR_FS_BLOCKS_TO_BYTES(val, bsize) ((val * bsize) >> 1)
@@ -147,7 +147,7 @@ int sigar_statvfs(sigar_t *sigar,
     memset(s, '\0', sizeof(*(s)))
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 sigar_uint64_t sigar_FileTimeToTime(FILETIME *ft);
 #else
@@ -264,7 +264,7 @@ int sigar_link_attrs_get(sigar_t *sigar,
     return SIGAR_ENOTIMPL;
 }
 
-#elif defined(WIN32)
+#elif defined(_WIN32)
 
 #include <accctrl.h>
 #include <aclapi.h>

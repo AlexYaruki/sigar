@@ -70,7 +70,7 @@
  * <http://www.apache.org/>.
  */
 
-#ifndef WIN32
+#ifndef _WIN32
 #  ifdef _AIX
 #    define _LARGE_FILES
 #  else
@@ -81,7 +81,7 @@
 
 #include "sigar.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
 # include <sys/param.h>
 # include <sys/mount.h>
@@ -147,7 +147,7 @@ int sigar_statvfs(sigar_t *sigar,
     memset(s, '\0', sizeof(*(s)))
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 sigar_uint64_t sigar_FileTimeToTime(FILETIME *ft);
 #else

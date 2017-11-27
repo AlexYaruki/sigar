@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#ifdef WIN32
+#ifdef _WIN32
 #define UNICODE
 #define _UNICODE
 
@@ -129,8 +129,8 @@ static int get_formatted_message(EVENTLOGRECORD *pevlr,
             ptr += wcslen(ptr) + 1;
         }
     }
-
-    ptr = wcstok(msgdll, FILESEP);
+	wchar_t* buffor;
+    ptr = wcstok(msgdll, FILESEP,&buffor);
     while (ptr) {
         HINSTANCE hlib;
 
@@ -150,7 +150,7 @@ static int get_formatted_message(EVENTLOGRECORD *pevlr,
                 break;
             }
         }
-        ptr = wcstok(NULL, FILESEP);
+        ptr = wcstok(NULL, FILESEP,&buffor);
     }
 
     if (msgbuf) {

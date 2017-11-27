@@ -19,21 +19,21 @@
 #include <errno.h>
 #include <stdio.h>
 
-#ifndef WIN32
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/time.h>
+#ifndef _WIN32
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <sys/time.h>
 #endif
 #if defined(__OpenBSD__) || defined(__FreeBSD__)
-#include <netinet/in.h>
+	#include <netinet/in.h>
 #endif
-#ifndef WIN32
-#include <arpa/inet.h>
+#ifndef _WIN32
+	#include <arpa/inet.h>
 #endif
 #if defined(HAVE_UTMPX_H)
-# include <utmpx.h>
+	#include <utmpx.h>
 #elif defined(HAVE_UTMP_H)
-# include <utmp.h>
+	#include <utmp.h>
 #endif
 
 #include "sigar.h"
@@ -329,7 +329,7 @@ SIGAR_DECLARE(int) sigar_sys_info_get(sigar_t *sigar,
 {
     SIGAR_ZERO(sysinfo);
 
-#ifndef WIN32
+#ifndef _WIN32
     sigar_sys_info_get_uname(sysinfo);
 #endif
 
@@ -338,7 +338,7 @@ SIGAR_DECLARE(int) sigar_sys_info_get(sigar_t *sigar,
     return SIGAR_OK;
 }
 
-#ifndef WIN32
+#ifndef _WIN32
 
 #include <sys/utsname.h>
 
@@ -616,7 +616,7 @@ sigar_file_system_ping(sigar_t *sigar,
                        sigar_file_system_t *fs)
 {
     int status = SIGAR_OK;
-#ifndef WIN32
+#ifndef _WIN32
     char *ptr;
 
     if ((fs->type == SIGAR_FSTYPE_NETWORK) &&
@@ -2107,7 +2107,7 @@ SIGAR_DECLARE(int) sigar_fqdn_get(sigar_t *sigar, char *name, int namelen)
     sigar_hostent_t data;
     struct hostent *p;
     char domain[SIGAR_FQDN_LEN + 1];
-#ifdef WIN32
+#ifdef _WIN32
     int status = sigar_wsa_init(sigar);
 
     if (status != SIGAR_OK) {
@@ -2279,7 +2279,7 @@ SIGAR_DECLARE(int) sigar_fqdn_get(sigar_t *sigar, char *name, int namelen)
 #define MAX_STRING_LEN 8192
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 /* The windows version of getPasswordNative was lifted from apr */
 SIGAR_DECLARE(char *) sigar_password_get(const char *prompt)
 {

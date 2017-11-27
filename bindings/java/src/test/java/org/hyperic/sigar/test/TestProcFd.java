@@ -18,6 +18,9 @@ package org.hyperic.sigar.test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
@@ -41,21 +44,18 @@ public class TestProcFd extends SigarTestCase {
 
         try {
             long pid = sigar.getPid();
-
-            long total = sigar.getProcFd(pid).getTotal(); 
-
-            SigarLoader loader = new SigarLoader(Sigar.class);
-            String path = loader.findJarPath(null);
-            File file = new File(path, loader.getJarName());
-
-            traceln("Opening " + file);
-
+            final long total = sigar.getProcFd(pid).getTotal();
+            Path tmp = Files.createFile(Paths.get("procFd.tmp"));
+            traceln("Opening " + tmp);
+            File file = tmp.toFile();
+            file.deleteOnExit();
             FileInputStream is = new FileInputStream(file);
 
             assertEqualsTrace("Total", total + 1,
                               sigar.getProcFd(pid).getTotal());
 
             is.close();
+
 
             assertEqualsTrace("Total", total,
                               sigar.getProcFd(pid).getTotal());

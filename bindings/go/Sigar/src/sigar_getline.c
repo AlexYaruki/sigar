@@ -324,7 +324,7 @@ static void     search_forw(int s);     /* look forw for current string */
 #include <bios.h>
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #  define MSDOS
 #  include <io.h>
 #  include <windows.h>
@@ -656,7 +656,7 @@ gl_putc(int c)
 
     if ( !gl_passwd || !isgraph(c))
     {
-#ifdef WIN32
+#ifdef _WIN32
        CharToOemBuff((char const *)&c,&ch,1);
 #endif
 
@@ -680,7 +680,7 @@ gl_puts(char *buf)
     int len = strlen(buf);
 
     if (gl_notty) return;
-#ifdef WIN32
+#ifdef _WIN32
     {
      char *OemBuf = (char *)malloc(2*len);
      CharToOemBuff(buf,OemBuf,len);
@@ -698,7 +698,7 @@ gl_error(char *buf)
     int len = strlen(buf);
 
     gl_cleanup();
-#ifdef WIN32
+#ifdef _WIN32
     {
       char *OemBuf = (char *)malloc(2*len);
       CharToOemBuff(buf,OemBuf,len);
@@ -802,7 +802,7 @@ sigar_getlinem(int mode, char *prompt)
     }
     while ((c = gl_getc()) >= 0) {
         gl_extent = 0;          /* reset to full extent */
-#ifndef WIN32
+#ifndef _WIN32
         if (isprint(c)) {
 #else
         if (c >= ' ') {
@@ -980,7 +980,7 @@ sigar_getlinem(int mode, char *prompt)
 #if !defined(WIN32)
                         raise(sig);
 #endif
-#ifdef WIN32
+#ifdef _WIN32
                         if (sig == SIGINT) GenerateConsoleCtrlEvent(CTRL_C_EVENT,0);
                         else raise(sig);
 #endif

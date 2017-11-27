@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #include <pdh.h>
 #include <pdhmsg.h>

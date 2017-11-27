@@ -1,7 +1,7 @@
 #ifndef __SIGAR_TESTS_H__
 #define __SIGAR_TESTS_H__
 
-#ifdef WIN32
+#ifdef _WIN32
 #define EOL "\r\n"
 #else
 #define EOL "\n"
@@ -9,7 +9,7 @@
 
 /**
  * pick the right format for a unsigned 64bit int */
-#ifdef WIN32
+#ifdef _WIN32
 # define F_U64 "%I64u"
 # define F_SIZE_T "%lu"
 #else

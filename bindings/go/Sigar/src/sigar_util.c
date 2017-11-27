@@ -26,7 +26,7 @@
 #include "sigar_util.h"
 #include "sigar_os.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 
 #include <dirent.h>
 #include <sys/stat.h>
@@ -345,7 +345,7 @@ int sigar_mem_calc_ram(sigar_t *sigar, sigar_mem_t *mem)
     return ram;
 }
 
-#ifndef WIN32
+#ifndef _WIN32
 
 sigar_iodev_t *sigar_iodev_get(sigar_t *sigar,
                                const char *dirname)
@@ -850,11 +850,11 @@ int sigar_file2str(const char *fname, char *buffer, int buflen)
     return status;
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 #define vsnprintf _vsnprintf
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #   define rindex strrchr
 #endif
 
@@ -1050,7 +1050,7 @@ SIGAR_DECLARE(void) sigar_log_impl_file(sigar_t *sigar, void *data,
     fprintf(fp, "[%s] %s\n", log_levels[level], message);
 }
 
-#ifndef WIN32
+#ifndef _WIN32
 sigar_int64_t sigar_time_now_millis(void)
 {
     struct timeval tv;

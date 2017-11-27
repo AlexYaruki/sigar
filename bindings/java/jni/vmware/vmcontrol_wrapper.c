@@ -18,7 +18,7 @@
 
 #ifdef VMCONTROL_WRAPPER_SUPPORTED
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <dlfcn.h>
@@ -29,7 +29,7 @@
 
 #include <stdio.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #define DL_LOAD(lib)  LoadLibrary(lib)
 #define DL_CLOSE(h)   FreeLibrary(h)
 #define DL_SYM        GetProcAddress

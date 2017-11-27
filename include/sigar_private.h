@@ -26,7 +26,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #include <stddef.h>
 #ifndef DARWIN
@@ -111,7 +111,7 @@
 #define strnEQ(s1, s2, n) (strncmp(s1, s2, n) == 0)
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
 #endif
@@ -403,7 +403,7 @@ int sigar_get_iftype(const char *name, int *type, int *inst);
 #define SIGAR_NIC_EC       "Econet"
 #define PID_CACHE_CLEANUP_PERIOD 1000*60*10 /* 10 minutes */
 #define PID_CACHE_ENTRY_EXPIRE_PERIOD 1000*60*20 /* 20 minutes */
-#ifndef WIN32
+#ifndef _WIN32
 #include <netdb.h>
 #endif
 
@@ -418,7 +418,7 @@ int sigar_get_iftype(const char *name, int *type, int *inst);
 typedef struct {
     char buffer[SIGAR_HOSTENT_LEN];
     int error;
-#ifndef WIN32
+#ifndef _WIN32
     struct hostent hs;
 #endif
 #ifdef SIGAR_HAS_HOSTENT_DATA

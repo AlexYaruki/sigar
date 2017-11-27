@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef WIN32_BINDINGS_H
+#ifndef _WIN32_BINDINGS_H
 #define WIN32_BINDINGS_H
 
 /* Exclude rarely-used stuff from windows headers */

@@ -157,18 +157,6 @@ public class Sigar implements SigarProxy {
     }
 
     private static void loadLibrary() throws SigarException {
-        if (SigarLoader.IS_WIN32 &&
-            System.getProperty("os.version").equals("4.0"))
-        {
-            try {
-                //NT 4.0 only
-                String lib =
-                    loader.findJarPath("pdh.dll") +
-                    File.separator + "pdh.dll";
-                loader.systemLoad(lib);
-            } catch (Exception e) {}
-        }
-
         try {
             loader.load();
         } catch (ArchNotSupportedException e) {

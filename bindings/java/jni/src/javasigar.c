@@ -29,9 +29,7 @@
 #include <string.h>
 #include <assert.h>
 
-#ifdef WIN32
-#include <winsock.h>
-#else
+#ifndef _WIN32
 #include <errno.h>
 #include <sys/types.h>
 #include <stdlib.h>
@@ -3812,7 +3810,7 @@ JNIEXPORT jobjectArray SIGAR_JNIx(getFileSystemListNative)
         jobject fsobj;
         jclass obj_cls;
 
-#ifdef WIN32
+#ifdef _WIN32
         obj_cls = cls;
 #else
         if ((fs->type == SIGAR_FSTYPE_NETWORK) &&
@@ -3869,7 +3867,7 @@ JNIEXPORT jint Java_org_hyperic_sigar_RPC_ping
 (JNIEnv *env, jclass cls_obj, jstring jhostname,
  jint protocol, jlong program, jlong version)
 {
-#ifdef WIN32
+#ifdef _WIN32
     return JNI_FALSE; /*XXX*/
 #else
     jboolean is_copy;
@@ -3897,7 +3895,7 @@ JNIEXPORT jint Java_org_hyperic_sigar_RPC_ping
 JNIEXPORT jstring SIGAR_JNI(RPC_strerror)
 (JNIEnv *env, jclass cls_obj, jint err)
 {
-#ifdef WIN32
+#ifdef _WIN32
     return NULL;
 #else
     return JENV->NewStringUTF(env, sigar_rpc_strerror(err));
@@ -5016,7 +5014,7 @@ JNIEXPORT void SIGAR_JNI(SigarLog_setLevel)
 JNIEXPORT jlong SIGAR_JNIx(getServicePid)
 (JNIEnv *env, jobject sigar_obj, jstring jname)
 {
-#ifdef WIN32
+#ifdef _WIN32
     const char *name;
     jboolean is_copy;
     jlong pid = 0;
@@ -5047,7 +5045,7 @@ JNIEXPORT jlong SIGAR_JNIx(getServicePid)
 JNIEXPORT jlong SIGAR_JNI(ResourceLimit_INFINITY)
 (JNIEnv *env, jclass cls)
 {
-#ifdef WIN32
+#ifdef _WIN32
     return 0x7fffffff;
 #else
     return RLIM_INFINITY;
@@ -5057,7 +5055,7 @@ JNIEXPORT jlong SIGAR_JNI(ResourceLimit_INFINITY)
 JNIEXPORT jstring SIGAR_JNI(win32_Win32_findExecutable)
 (JNIEnv *env, jclass sigar_class, jstring jname)
 {
-#ifdef WIN32
+#ifdef _WIN32
 #include "shellapi.h"
     const char *name;
     jboolean is_copy;
@@ -5085,7 +5083,7 @@ JNIEXPORT jstring SIGAR_JNI(win32_Win32_findExecutable)
 JNIEXPORT jboolean SIGAR_JNI(win32_FileVersion_gather)
 (JNIEnv *env, jobject obj, jstring jname)
 {
-#ifdef WIN32
+#ifdef _WIN32
     int status;
     sigar_file_version_t version;
     jboolean is_copy;
