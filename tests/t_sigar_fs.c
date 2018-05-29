@@ -89,6 +89,11 @@ TEST(test_sigar_file_system_list_get) {
 			case ERROR_NOT_READY:
 				break;
 #endif
+#if defined (__linux__)
+            case EACCES:
+                break;
+#endif
+
 			default:
 				fprintf(stderr, "sigar_file_system_usage_get(%s) ret = %d (%s)\n",
 						fs.dir_name,

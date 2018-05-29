@@ -15,10 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE 1
+#endif
 #include <dirent.h>
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <sys/param.h>
 #include <sys/stat.h>
@@ -603,7 +607,7 @@ int sigar_os_proc_list_get(sigar_t *sigar,
                            sigar_proc_list_t *proclist)
 {
     DIR *dirp = opendir(PROCP_FS_ROOT);
-    struct dirent *ent, dbuf;
+    struct dirent *ent;
     register const int threadbadhack = !sigar->has_nptl;
 
     if (!dirp) {
@@ -614,11 +618,7 @@ int sigar_os_proc_list_get(sigar_t *sigar,
         sigar->proc_signal_offset = get_proc_signal_offset();
     }
 
-    while (readdir_r(dirp, &dbuf, &ent) == 0) {
-        if (!ent) {
-            break;
-        }
-
+    while ((ent = readdir(dirp)) != NULL) {
         if (!sigar_isdigit(*ent->d_name)) {
             continue;
         }
@@ -2482,7 +2482,7 @@ int sigar_proc_port_get(sigar_t *sigar, int protocol,
     int status;
     sigar_net_connection_t netconn;
     DIR *dirp;
-    struct dirent *ent, dbuf;
+    struct dirent *ent;
 
     SIGAR_ZERO(&netconn);
     *pid = 0;
@@ -2502,17 +2502,12 @@ int sigar_proc_port_get(sigar_t *sigar, int protocol,
         return errno;
     }
 
-    while (readdir_r(dirp, &dbuf, &ent) == 0) {
+    while ((ent = readdir(dirp)) != NULL) {
         DIR *fd_dirp;
-        struct dirent *fd_ent, fd_dbuf;
+        struct dirent *fd_ent;
         struct stat sb;
         char fd_name[BUFSIZ], pid_name[BUFSIZ];
         int len, slen;
-
-        if (ent == NULL) {
-            break;
-        }
-
         if (!sigar_isdigit(*ent->d_name)) {
             continue;
         }
@@ -2543,13 +2538,8 @@ int sigar_proc_port_get(sigar_t *sigar, int protocol,
             continue;
         }
 
-        while (readdir_r(fd_dirp, &fd_dbuf, &fd_ent) == 0) {
+        while ((fd_ent = readdir(fd_dirp)) != NULL) {
             char fd_ent_name[BUFSIZ];
-
-            if (fd_ent == NULL) {
-                break;
-            }
-
             if (!sigar_isdigit(*fd_ent->d_name)) {
                 continue;
             }
@@ -2717,11 +2707,8 @@ static void xen_parse(sigar_sys_info_t *info,
 static void xen_vendor_parse(char *data, sigar_sys_info_t *info)
 {
     kv_parse(data, info, xen_parse);
-
-    snprintf(info->description,
-             sizeof(info->description),
-             "XenServer %s",
-             info->vendor_version);
+    strcpy(info->description,"XenServer ");
+    strncpy(info->description + 10,info->vendor_version,256 - strlen(info->description));
 }
 
 typedef struct {
@@ -2791,10 +2778,9 @@ static int get_linux_vendor_info(sigar_sys_info_t *info)
     }
 
     if (info->description[0] == '\0') {
-        snprintf(info->description,
-                 sizeof(info->description),
-                 "%s %s",
-                 info->vendor, info->vendor_version);
+        char* description;
+        asprintf(&description,"%s %s",info->vendor, info->vendor_version);
+        strncpy(info->description,description,sizeof(info->description));
     }
 
     return SIGAR_OK;
